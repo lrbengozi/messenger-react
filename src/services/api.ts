@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useAuth } from "../context/AuthProvider/useAuth";
 import { getUserLocalStorage } from "../context/AuthProvider/util";
 
 export const Api = axios.create({

@@ -1,0 +1,35 @@
+.box--img {
+  width: 10rem;
+  height: 10rem;
+  position: relative;
+
+  .imgProfile {
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+  }
+
+  .edit--photo {
+    color: #fff;
+    border-radius: 50%;
+    background-color: rgba($color: #000000, $alpha: 0.6);
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    opacity: 0;
+
+    transition: all ease 0.2s;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}

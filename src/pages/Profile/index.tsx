@@ -1,38 +1,88 @@
 import { useState, useEffect } from "react";
-import { useAuth } from "../../context/AuthProvider/useAuth";
+import { ProfilePicture } from "../../components/ProfilePicture";
 import { IUserData } from "./types";
 import { getUserDataRequest } from "./util";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+
+import "./style.scss";
+
+async function getUserData() {
+  const response = await getUserDataRequest();
+  const { name, email, profilePicture } = response;
+  return { name, email, profilePicture };
+}
 
 export const Profile = () => {
   const [userData, setUserData] = useState<IUserData | null>();
-  const auth = useAuth();
 
   useEffect(() => {
-    getUserData();
+    const loadAll = async () => {
+      const response = await getUserData();
+      setUserData(response);
+    };
+
+    loadAll();
   }, []);
 
-  async function getUserData() {
-    const response = await getUserDataRequest();
+  function onChange(envent: any) {
+    const { value, name } = envent.target;
 
-    if (response) {
-      const { name, email, profilePicture } = response;
-      setUserData({ name, email, profilePicture });
-    } else {
-      auth.logout();
-    }
+    setUserData({
+      ...userData,
+      [name]: value,
+    });
   }
 
   return (
-    <div>
-      <h1>Profile {userData?.name}</h1>
-      <h2>Email {userData?.email}</h2>
-      <h2>Profile picture</h2>
-      <img
-        src={`data:image/jpeg;base64,${userData?.profilePicture}`}
-        alt="ProfilePic"
-      />
+    <div className="container">
+      <div className="box">
+        <div className="box--title">
+          <div className="box--title--header">
+            <div className="arrow--back" onClick={() => {}}>
+              <ArrowBackIcon style={{ fontSize: 35, color: "#fff" }} />
+            </div>
+            <h1>Profile</h1>
+          </div>
+        </div>
+        <div className="box--content">
+          <ProfilePicture profilePicture={userData?.profilePicture} />
 
-      <button onClick={auth.logout}>SAIR</button>
+          <br />
+          {userData && (
+            <div>
+              <div className="float-label">
+                <input
+                  type="name"
+                  name="name"
+                  value={userData.name}
+                  onChange={onChange}
+                />
+                <label
+                  htmlFor="name"
+                  className={userData.name ? "label--active" : ""}
+                >
+                  Nome
+                </label>
+              </div>
+
+              <div className="float-label">
+                <input
+                  type="email"
+                  name="email"
+                  value={userData.email}
+                  onChange={onChange}
+                />
+                <label
+                  htmlFor="name"
+                  className={userData.email ? "label--active" : ""}
+                >
+                  E-mail
+                </label>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
